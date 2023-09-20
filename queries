@@ -162,7 +162,7 @@ DELETE customers
 PUT customers
 {
   "mappings": {
-    "dynamic":"strict",
+    "dynamic":"strict",  # if 'strict' document will be rejected || if 'false' then document will be indexed but field can't be used
     
     "properties": {
       "name":{
