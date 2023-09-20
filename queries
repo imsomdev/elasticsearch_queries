@@ -134,7 +134,49 @@ POST students/_bulk
 {"doc":{"age":25}}
 {"delete":{"_id":125478}}
 
+# get all details
+GET students/_search
 
+# index mapping
+
+PUT customers/_doc/1
+{
+  "name": "Raju",
+  "age": 11
+}
+
+PUT customers/_doc/2
+{
+  "name": "Mira",
+  "age": 13,
+  "address": "Kolkata"
+}
+
+# get mapping details
+GET customers/_mapping
+
+# delete index
+DELETE customers
+
+# create explicit mapping
+PUT customers
+{
+  "mappings": {
+    "dynamic":"strict",
+    
+    "properties": {
+      "name":{
+        "type": "text"
+      },
+      "age":{
+        "type": "integer"
+      }
+    }
+  }
+}
+
+GET customers/_mapping
+GET customers/_search
 
 
 
