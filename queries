@@ -1,0 +1,148 @@
+GET _cluster/health
+GET _cat/nodes?v
+PUT  /fruits
+GET _cat/shards?v
+###########################
+
+DELETE fruits
+#######################
+
+PUT students
+GET _cat/shards
+DELETE students
+#####################
+
+PUT students
+{
+  "settings": {
+    "number_of_shards": 2
+    , "number_of_replicas": 2
+  }
+}
+#################
+
+DELETE students
+#################
+
+PUT students
+# insert a new data
+
+POST students/_doc 
+{
+  "name":"Rahul",
+  "age":35
+}
+# insert a new data with id
+
+POST students/_doc/125478
+{
+  "name":"Ram",
+  "age":35
+}
+# fetch details of an Id
+
+GET students/_doc/125478
+
+##################
+
+POST students/_doc 
+{
+  "name":"Ramesh",
+  "age":29
+}
+# search all over the database
+
+GET students/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+# update document details using id
+
+POST students/_update/125478
+{
+  "doc": {
+    "age": 5,
+    "Last Name":"Das"
+  }
+}
+#  update document details using script
+
+POST students/_update/125478
+{
+  "script": {
+    "source": "ctx._source.age=params.new_age"
+    , "params": {
+      "new_age":5
+    }
+  }
+}
+# you can write login inside script
+
+POST students/_update/125478
+{
+  "script": {
+    "source":"""
+    if(ctx._source.age < 0){
+      ctx.op = 'delete'
+    }else{
+      ctx._source.age--
+    }"""
+  }
+}
+# update and create in same query
+
+POST students/_update/125478
+{
+  "script": {
+    "source": "ctx._source.age=5"
+  }
+  , "upsert": {
+      "name":"Radha",
+      "age":35
+  }
+}
+# fetch all details
+
+GET /students/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+# update all documents in one query
+
+POST /students/_update_by_query
+{
+  "query": {
+    "match_all": {}
+  }
+  , "script": {
+    "source":"ctx._source.age=40"
+  }
+}
+
+# Bulk api - single post call and multiple operations (index, create, update and delete)
+
+POST students/_bulk
+{"index":{ }}
+{"name":"Subir", "age": 22}
+{"create":{ }}
+{"name":"Anil", "age": 26}
+{"update":{"_id":"WLrVp4oBRiGB_YHNnYLt"}}
+{"doc":{"age":25}}
+{"delete":{"_id":125478}}
+
+
+
+
+
+
+
+
+
+
+
+
+
