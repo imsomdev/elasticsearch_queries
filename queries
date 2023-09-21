@@ -178,6 +178,77 @@ PUT customers
 GET customers/_mapping
 GET customers/_search
 
+# reindexing
+
+DELETE students
+PUT students/_doc/2
+{
+  "name":"Ram",
+  "age":10
+}
+GET students/_search
+PUT students/_doc/1
+{
+  "name":"Shyam",
+  "age":12
+}
+
+PUT new_students
+{
+  "mappings": {
+    "properties": {
+      "name":{
+        "type":"text"
+      },
+      "age":{
+        "type":"integer"
+      }
+    }
+  }
+}
+
+GET new_students/_mapping
+POST _reindex
+{
+  "source": {
+    "index": "students",
+    "query": {
+      "match_all": {}
+    }
+  },
+  "dest": {
+    "index": "new_students"
+  },
+  "script": {
+    "source": "ctx._source.id = ctx._source.name + ctx._source.age"
+  }
+}
+
+# coercion 
+# now age will be strictly integer
+
+PUT students
+{
+  "mappings": {
+    "properties": {
+      "name":{
+        "type":"text"
+      },
+      "age":{
+        "type":"integer"
+        , "coerce": false  
+      }
+    }
+  }
+}
+
+PUT students/_doc/1
+{
+  "name":"Shyam",
+  "age":12
+}
+
+
 
 
 
