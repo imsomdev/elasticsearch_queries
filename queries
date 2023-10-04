@@ -248,8 +248,39 @@ PUT students/_doc/1
   "age":12
 }
 
+# calculate avg rating
 
+GET movies/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "size": 0, 
+  "aggs": {
+    "avg_rating": {
+      "avg": {
+        "field": "rating"
+      }
+    }
+  }
+}
 
+# Movie directors names who directed more than 2 movies
+GET movies/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "size": 0, 
+  "aggs": {
+    "find_director": {
+      "terms": {
+        "field": "director.keyword",
+        "min_doc_count": 2
+      }
+    }
+  }
+}
 
 
 
